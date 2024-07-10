@@ -1,22 +1,19 @@
-import React, { useEffect, useState } from 'react';
+// HomeScreen.js
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Image } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { useCart } from './CartContext';
-import addIcon from './assets/add.png';
-import removeIcon from './assets/remove.png';
-import Logo from './assets/Logo.png';
 
 const HomeScreen = () => {
-  const [items, setItems] = useState([]);
   const navigation = useNavigation();
   const { cart, addToCart, removeFromCart } = useCart();
+  const [products, setProducts] = useState([]);
 
   useEffect(() => {
     fetch('https://fakestoreapi.com/products')
-      .then(response => response.json())
-      .then(data => setItems(data))
-      .catch(error => console.error(error));
+      .then(res => res.json())
+      .then(data => setProducts(data));
   }, []);
 
   return (
@@ -26,7 +23,8 @@ const HomeScreen = () => {
           <FontAwesome name="bars" size={24} color="#4D4D4D" />
         </TouchableOpacity>
         <View style={styles.titleContainer}>
-          <Image source={Logo} style={styles.logoTitle} />
+          <Text style={styles.title}>Open</Text>
+          <Text style={styles.title}>Fashion</Text>
         </View>
         <View style={styles.iconContainer}>
           <TouchableOpacity style={styles.iconButton}>
@@ -54,21 +52,25 @@ const HomeScreen = () => {
         </View>
       </View>
       <View style={styles.itemsContainer}>
-        {items.map(item => (
-          <View key={item.id} style={styles.item}>
-            <Image source={{ uri: item.image }} style={styles.itemImage} />
-            <Text style={styles.itemTitle}>{item.title}</Text>
-            <Text style={styles.itemDescription}>{item.description}</Text>
-            <Text style={styles.itemPrice}>${item.price}</Text>
+        {products.map(product => (
+          <TouchableOpacity
+            key={product.id}
+            style={styles.item}
+            onPress={() => navigation.navigate('ProductDetail', { product })}
+          >
+            <Image source={{ uri: product.image }} style={styles.itemImage} />
+            <Text style={styles.itemTitle}>{product.title}</Text>
+            <Text style={styles.itemDescription}>{product.description}</Text>
+            <Text style={styles.itemPrice}>${product.price}</Text>
             <View style={styles.iconRow}>
-              <TouchableOpacity style={styles.actionButton} onPress={() => addToCart(item)}>
-                <Image source={addIcon} style={styles.actionIcon} />
+              <TouchableOpacity style={styles.actionButton} onPress={() => addToCart(product)}>
+                <Image source={require('./assets/add.png')} style={styles.actionIcon} />
               </TouchableOpacity>
-              <TouchableOpacity style={styles.actionButton} onPress={() => removeFromCart(item)}>
-                <Image source={removeIcon} style={styles.actionIcon} />
+              <TouchableOpacity style={styles.actionButton} onPress={() => removeFromCart(product)}>
+                <Image source={require('./assets/remove.png')} style={styles.actionIcon} />
               </TouchableOpacity>
             </View>
-          </View>
+          </TouchableOpacity>
         ))}
       </View>
     </ScrollView>
@@ -186,3 +188,5 @@ const styles = StyleSheet.create({
 });
 
 export default HomeScreen;
+
+

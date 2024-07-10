@@ -1,30 +1,41 @@
+// CheckoutScreen.js
 import React from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, Image } from 'react-native';
+import { View, Text, Image, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import { useCart } from './CartContext';
+import { useNavigation } from '@react-navigation/native';
 import removeIcon from './assets/remove.png';
 
 const CheckoutScreen = () => {
   const { cart, removeFromCart } = useCart();
+  const navigation = useNavigation();
+
+  const totalPrice = cart.reduce((total, item) => total + item.price, 0);
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Checkout</Text>
-      <FlatList
-        data={cart}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item }) => (
-          <View style={styles.item}>
-            <Image source={{ uri: item.image }} style={styles.itemImage} />
-            <View style={styles.itemDetails}>
-              <Text style={styles.itemTitle}>{item.title}</Text>
-              <Text style={styles.itemPrice}>${item.price}</Text>
+      <ScrollView style={styles.scrollView}>
+        <Text style={styles.header}>CHECKOUT</Text>
+        {cart.map((item) => (
+          <View key={item.id} style={styles.cartItem}>
+            <Image source={{ uri: item.image }} style={styles.cartItemImage} />
+            <View style={styles.cartItemDetails}>
+              <Text style={styles.cartItemTitle}>{item.title}</Text>
+              <Text style={styles.cartItemDescription}>{item.description}</Text>
+              <Text style={styles.cartItemPrice}>${item.price}</Text>
             </View>
-            <TouchableOpacity style={styles.removeButton} onPress={() => removeFromCart(item)}>
+            <TouchableOpacity onPress={() => removeFromCart(item)}>
               <Image source={removeIcon} style={styles.removeIcon} />
             </TouchableOpacity>
           </View>
-        )}
-      />
+        ))}
+      </ScrollView>
+      <View style={styles.footer}>
+        <Text style={styles.totalText}>EST. TOTAL</Text>
+        <Text style={styles.totalPrice}>${totalPrice}</Text>
+        <TouchableOpacity style={styles.checkoutButton}>
+          <Text style={styles.checkoutButtonText}>CHECKOUT</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
@@ -33,43 +44,71 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'white',
+  },
+  scrollView: {
     padding: 16,
   },
-  title: {
+  header: {
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 16,
   },
-  item: {
+  cartItem: {
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: '#ddd',
-    paddingBottom: 8,
   },
-  itemImage: {
-    width: 60,
-    height: 60,
+  cartItemImage: {
+    width: 100,
+    height: 100,
+    borderRadius: 8,
   },
-  itemDetails: {
+  cartItemDetails: {
     flex: 1,
     marginLeft: 16,
   },
-  itemTitle: {
-    fontSize: 16,
+  cartItemTitle: {
+    fontSize: 18,
     fontWeight: 'bold',
   },
-  itemPrice: {
+  cartItemDescription: {
     fontSize: 14,
     color: '#888',
   },
-  removeButton: {
-    padding: 8,
+  cartItemPrice: {
+    fontSize: 18,
+    color: '#FC8966',
   },
   removeIcon: {
     width: 24,
     height: 24,
+  },
+  footer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: 16,
+    borderTopWidth: 1,
+    borderTopColor: '#ddd',
+  },
+  totalText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  totalPrice: {
+    fontSize: 24,
+    color: '#FC8966',
+  },
+  checkoutButton: {
+    backgroundColor: '#000',
+    padding: 16,
+    alignItems: 'center',
+    marginVertical: 20,
+    borderRadius: 4,
+  },
+  checkoutButtonText: {
+    color: '#fff',
+    fontSize: 18,
   },
 });
 
