@@ -4,6 +4,7 @@ import { View, Text, Image, StyleSheet, TouchableOpacity, ScrollView } from 'rea
 import { useCart } from './CartContext';
 import { useNavigation } from '@react-navigation/native';
 import removeIcon from './assets/remove.png';
+import Logo from './assets/Logo.png';
 
 const CheckoutScreen = () => {
   const { cart, removeFromCart } = useCart();
@@ -14,7 +15,10 @@ const CheckoutScreen = () => {
   return (
     <View style={styles.container}>
       <ScrollView style={styles.scrollView}>
-        <Text style={styles.header}>CHECKOUT</Text>
+      <View style={styles.titleContainer}>
+          <Image source={Logo} style={styles.logoTitle} />
+        </View>
+        
         {cart.map((item) => (
           <View key={item.id} style={styles.cartItem}>
             <Image source={{ uri: item.image }} style={styles.cartItemImage} />
@@ -52,6 +56,10 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 16,
+  },
+  logoTitle: {
+    marginLeft: 125,
+    marginBottom: 30,
   },
   cartItem: {
     flexDirection: 'row',

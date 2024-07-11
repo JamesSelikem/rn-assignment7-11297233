@@ -4,6 +4,7 @@ import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Image } from 'rea
 import { FontAwesome } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { useCart } from './CartContext';
+import Logo from './assets/Logo.png';
 
 const HomeScreen = () => {
   const navigation = useNavigation();
@@ -19,12 +20,11 @@ const HomeScreen = () => {
   return (
     <ScrollView style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity style={styles.iconButton}>
-          <FontAwesome name="bars" size={24} color="#4D4D4D" />
-        </TouchableOpacity>
+      
         <View style={styles.titleContainer}>
-          <Text style={styles.title}>Open</Text>
-          <Text style={styles.title}>Fashion</Text>
+        <View style={styles.titleContainer}>
+          <Image source={Logo} style={styles.logoTitle} />
+        </View>
         </View>
         <View style={styles.iconContainer}>
           <TouchableOpacity style={styles.iconButton}>
